@@ -52,7 +52,7 @@ iraq_monthly_stats = iraq[['Deaths', 'Recovered', 'Confirmed']][39::30]
 iraq_monthly_stats.plot(kind='bar', figsize=(10, 5), title=
                         'Covid cases monthly record since March 2020')
 
-percentage_increase_may = iraq[100::].sum()/iraq.sum()*100
+percentage_increase_may = ((iraq.max()-iraq[:100:].max())/iraq.max())*100
 percentage_increase_may = percentage_increase_may.astype('int')
 percentage_increase_may = percentage_increase_may.to_frame()
 percentage_increase_may.columns = ['Percentage']
