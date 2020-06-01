@@ -72,13 +72,13 @@ def aggregate_stats(s):
     This function yo wrangle the data, then it will be
     mapped to each Data Set
     '''
-    s.drop(columns=x[22::], inplace=True)
-    s['Total Red Cards'] = x['HR'] + x['AR']
-    s['Total Yellow Cards'] = x['HY'] + x['AY']
-    s['Total Fouls'] = x['HF'] + x['AF']
-    s['Total Shots'] = x['HS'] + x['AS']
-    s['Total Shots on Target'] = x['HST'] + x['AST']
-    s['Total Goals'] = x['FTHG'] + x['FTAG']
+    s.drop(columns=s[22::], inplace=True)
+    s['Total Red Cards'] = s['HR'] + s['AR']
+    s['Total Yellow Cards'] = s['HY'] + s['AY']
+    s['Total Fouls'] = s['HF'] + s['AF']
+    s['Total Shots'] = s['HS'] + s['AS']
+    s['Total Shots on Target'] = s['HST'] + s['AST']
+    s['Total Goals'] = s['FTHG'] + s['FTAG']
     s.dropna(how='all', inplace=True)
     return s
 
