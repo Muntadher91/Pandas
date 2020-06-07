@@ -98,7 +98,10 @@ season_18_19 = season_18_19.apply(aggregate_stats, axis='columns')
 # Concatenate all datasets into one.
 
 decade = pd.concat([season_09_10, season_10_11, season_11_12, season_12_13, season_13_14,
-                    season_14_15, season_15_16, season_16_17, season_17_18, season_18_19])
+                    season_14_15, season_15_16, season_16_17, season_17_18, season_18_19],
+                   keys=['Season 09-10', 'Season 10-11', 'Season 11-12', 'Season 12-13',
+                         'Season 13-14', 'Season 14-15', 'Season 15-16', 'Season 16-17',
+                         'Season 17-18', 'Season 18-19'])
 decade = decade.sort_values(by='HomeTeam')
 
 
