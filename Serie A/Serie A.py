@@ -11,7 +11,7 @@ past 10 season in the Italian Football League Serie A
 
 
 import pandas as pd
-
+import plotly.graph_objects as go
 season_09_10 = pd.read_csv('./italian-serie-a_zip/season-0910_csv.csv', parse_dates=['Date'],
                            dtype={'HomeTeam':'category',
                                   'AwayTeam':'category',
@@ -117,14 +117,11 @@ x = decade[condition2]['HomeTeam'].value_counts()
 x = x.to_frame()
 x.reset_index(inplace=True)
 x.columns = ['Team', 'Home Wins']
-x.set_index('Team', inplace=True)
-x.head(1)
-x.head(5)[::-1].plot(y='Home Wins', figsize=(8, 6), kind='barh', title="Top 5 Home win")
+fig_home_wins = go.Figure(data=go.Bar(x=x['Team'], y=x['Home Wins']),
+                          layout_title_text="Home Wins per team since 2009-2010")
 
 
 # Home Win percentage
-
-
 
 total_home = decade['HomeTeam'].value_counts()
 x['Total Home Games'] = total_home.values
@@ -133,19 +130,18 @@ x['Total Home Games'] = total_home.values
 x['Home win Percentage'] = (x['Home Wins'].values/total_home.values)*100
 
 
-x.head(5)[::-1].plot(figsize=(8, 6), y='Home win Percentage', title='Top 5 Home win %', kind='barh')
-
 # Away win Percentage
 
-away_win = decade[decade['FTR'] == 'A']['AwayTeam'].value_counts()/decade['AwayTeam'].value_counts()
+away_win = decade[decade['FTR'] == 'A']['AwayTeam'].value_counts()
 
 away_win.sort_values(ascending=False, inplace=True)
 
-x['Away win Percentage'] = away_win.values*100
+x['Away win'] = away_win.values
 
 
-x.head(5)[::-1].plot(y='Away win Percentage', figsize=(8, 6), kind='barh',
-                     title=' Top 5 Away win %')
+fig_away_wins = go.Figure(data=go.Bar(x=x['Team'], y=x['Away win']), layout_title_text=
+                          'Away Wins per team since 2009-2010')
+
 
 total_goals = decade['Total Goals'].sum()
 total_yellows = decade['Total Yellow Cards'].sum()
@@ -241,18 +237,33 @@ total_per_season.columns = ['Total Goals', 'Total Yellow Cards', 'Total Reds', '
 
 # Graphs for different stats
 
-total_per_season['Total Yellow Cards'][::-1].plot(title='Total Yellow Cards per Season',
-                                                  y='Total Yellow Cards', figsize=(8, 6),
-                                                  kind='barh', color='yellow')
+fig_yellow = go.Figure(data=go.Bar(y=total_per_season['Total Yellow Cards'], x=total_per_season.index),
+                       layout_title_text="Total Yellow Cards per season since 2009-2010")
 
 
-total_per_season['Total Goals'].plot(y='Total Goals', figsize=(8, 6), kind='barh',
-                                     title='Total Goals per Season')
+
+fig_goals = go.Figure(data=go.Bar(y=total_per_season['Total Goals'], x=total_per_season.index),
+                      layout_title_text="Total Goals per season since 2009-2010")
 
 
-total_per_season['Total Red Cards'].plot(y='Total Red Cards', figsize=(8, 6), kind='barh',
-                                         title='Total Red Cards per Season', color='red')
+fig_red = go.Figure(data=go.Bar(y=total_per_season['Total Red Cards'], x=total_per_season.index),
+                    layout_title_text="Total Red Cards per season since 2009-2010")
 
 
-total_per_season['Total Fouls'].plot(y='Total Fouls', figsize=(8, 6), kind='barh',
-                                     title='Total Fouls per Season', color='blue')
+
+fig_fouls = go.Figure(data=go.Bar(y=total_per_season['Total Fouls'], x=total_per_season.index),
+                      layout_title_text="Total Fouls per season since 2009-2010")
+# TOP 5 collection
+fig_top_home = go.Figure(data=go.Bar(x=x['Team'].head(5), y=x['Home Wins']), layout_title_text=
+                         'Top 5 Teams for home wins')
+fig_top_away = go.Figure(data=go.Bar(x=x['Team'].head(5), y=x['Away win']), layout_title_text=
+                         'Top 5 Teams for away wins')
+#writing graphs to images, can be found under the Graph subfolder in the Github
+fig_yellow.write_image(r'./Graphs\Yellow_Cards.png')
+fig_goals.write_image(r'./Graphs\Goals.png')
+fig_red.write_image(r'./Graphs\Red_Cards.png')
+fig_fouls.write_image(r'./Graphs\Fouls.png')
+fig_home_wins.write_image(r'./Graphs\Home_Wins.png')
+fig_away_wins.write_image(r'./Graphs\Away_Wins.png')
+fig_top_home.write_image(r'./Graphs/Top_5_Home.png')
+fig_top_away.write_image(r'./Graphs/Top_5_Away.png')
